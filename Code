@@ -1670,7 +1670,7 @@ task.spawn(function()
                 local Nodes = Room:FindFirstChild('nodes')
                 if Nodes then
                     Nodes = Nodes:GetChildren()
-                    task.spawn(function(
+                    task.spawn(function()
                         table.sort(Nodes, function(a, b)
                             return tonumber(a.Name) > tonumber(b.Name)
                         end)
