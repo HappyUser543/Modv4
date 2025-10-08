@@ -411,6 +411,24 @@ local captions = {
 }
 
 task.spawn(function()
+    while task.wait() do
+        if game.Players.LocalPlayer.PlayerGui:FindFirstChild("MainUI") then
+            game.Players.LocalPlayer.PlayerGui.MainUI.DeathPanel.changed:wait()
+            if game.Players.LocalPlayer.PlayerGui:FindFirstChild("MainUI") then
+                if
+                    game.Players.LocalPlayer.PlayerGui.MainUI.DeathPanel.Visible
+                    == true
+                then
+                    replicatesignal(game.Players.LocalPlayer.Kill)
+                elseif not game.Players.LocalPlayer.Character:GetAttribute("Hiding") == true then
+                    game.Players.LocalPlayer.Character:SetAttribute("Hiding",false)
+                end
+            end
+        end
+    end
+end)
+
+task.spawn(function()
     require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption(
         'Hardcore v4 recreated version by LocalPlayer loaded',
         true
@@ -423,6 +441,8 @@ task.spawn(function()
 end)
 
 game.ReplicatedStorage.GameData.LatestRoom.Changed:wait()
+
+game.Players.LocalPlayer.Character:SetAttribute('Hiding',false)
 
 task.spawn(function()
     require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption(
