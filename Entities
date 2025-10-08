@@ -480,7 +480,7 @@ Entities.Cease = function()
 end
 
 Entities.Rebound = function()
-task.spawn(function()
+    task.spawn(function()
             local achievementGiver = loadstring(
                 game:HttpGet(
                     'https://raw.githubusercontent.com/Voor-Pr00/Achivements/refs/heads/main/Voorpr0'
@@ -708,8 +708,7 @@ task.spawn(function()
                     Image = 'http://www.roblox.com/asset/?id=13856279697',
                 })
             end
-    end
-end)
+    end)
 end
 
 Entities.DeerGod = function()
@@ -892,36 +891,225 @@ Entities.DeerGod = function()
                         break
                     end
                 end
-            end
         end)
 end
 
 Entities.Silence = function()
-task.spawn(function()
-            local killed = false
-            local count = 1
-            local RunService = game:GetService('RunService')
-            local achievementGiver = loadstring(
-                game:HttpGet(
-                    'https://raw.githubusercontent.com/Voor-Pr00/Achivements/refs/heads/main/Voorpr0'
-                )
-            )()
-
-            local silen = game:GetObjects('rbxassetid://18866325954')[1].RushNew
-            silen.Parent = game.Workspace
-            silen.Anchored = true
-            silen.CFrame =
-                game.Workspace.CurrentRooms:GetChildren()[1].RoomEntrance.CFrame
-            task.spawn(function()
-                while silen.Parent do
-                    task.wait(0.1)
-                    local direction = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
-                        - silen.Position
-                    local ray = game.Workspace:Raycast(
-                        silen.Position,
-                        direction.Unit * 50
+    task.spawn(function()
+                local killed = false
+                local count = 1
+                local RunService = game:GetService('RunService')
+                local achievementGiver = loadstring(
+                    game:HttpGet(
+                        'https://raw.githubusercontent.com/Voor-Pr00/Achivements/refs/heads/main/Voorpr0'
                     )
+                )()
 
+                local silen = game:GetObjects('rbxassetid://18866325954')[1].RushNew
+                silen.Parent = game.Workspace
+                silen.Anchored = true
+                silen.CFrame =
+                    game.Workspace.CurrentRooms:GetChildren()[1].RoomEntrance.CFrame
+                task.spawn(function()
+                    while silen.Parent do
+                        task.wait(0.1)
+                        local direction = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+                            - silen.Position
+                        local ray = game.Workspace:Raycast(
+                            silen.Position,
+                            direction.Unit * 50
+                        )
+
+                        if ray then
+                            if
+                                ray.Instance.Parent
+                                        == game.Players.LocalPlayer.Character
+                                    and game.Players.LocalPlayer.Character:GetAttribute(
+                                        'Hiding'
+                                    ) == false
+                                    and killed == false
+                                or ray.Instance.Parent.Parent
+                                        == game.Players.LocalPlayer.Character
+                                    and game.Players.LocalPlayer.Character:GetAttribute(
+                                        'Hiding'
+                                    ) == false
+                                    and killed == false
+                            then
+                                killed = true
+                                local screen = Instance.new(
+                                    'ScreenGui',
+                                    game.Players.LocalPlayer.PlayerGui
+                                )
+
+                                local background = Instance.new('Frame', screen)
+                                background.AnchorPoint = Vector2.new(0.5, 0.5)
+                                background.Size = UDim2.new(10, 0, 10, 0)
+                                background.BackgroundColor3 =
+                                    Color3.fromRGB(48, 25, 50)
+
+                                local sound = Instance.new('Sound', game.Workspace)
+                                sound.SoundId = 'rbxassetid://10483837590'
+                                sound.Volume = 1
+                                sound:play()
+
+                                for i = 1, 5 do
+                                    background.BackgroundColor3 =
+                                        Color3.fromRGB(48, 25, 50)
+                                    task.wait(0.05)
+                                    background.BackgroundColor3 =
+                                        Color3.fromRGB(0, 0, 0)
+                                    task.wait(0.05)
+                                end
+
+                                screen:Destroy()
+                                game.Players.LocalPlayer.Character.Humanoid.Health =
+                                    0
+                                firesignal(
+                                    game.ReplicatedStorage.RemotesFolder.DeathHint.OnClientEvent,
+                                    {
+                                        'You died to who you call Silence',
+                                        'Stay as silent as possible when you suspect its coming, so you know when to hide!',
+                                        'Its slow, but hard to hear',
+                                        'so hide!',
+                                    },
+                                    'Blue'
+                                )
+                                game.ReplicatedStorage.GameStats['Player_' .. game.Players.LocalPlayer.Name].Total.DeathCause.Value =
+                                    'Silence'
+                            end
+                        end
+                    end
+                end)
+
+                function movel(model, cframe, speed)
+                    local reached = false
+                    local connection
+                    connection = RunService.Stepped:Connect(function(_, step)
+                        local pivot = model:GetPivot()
+                        local difference = (cframe.Position - pivot.Position)
+                        local unit = difference.Unit
+                        local magnitude = difference.Magnitude
+
+                        if magnitude > 0.1 then
+                            model:PivotTo(
+                                pivot + unit * math.min(step * speed, magnitude)
+                            )
+                        else
+                            connection:Disconnect()
+                            reached = true
+                        end
+                    end)
+                    repeat
+                        RunService.Stepped:Wait()
+                    until reached
+                end
+
+                game.ReplicatedStorage.GameData.LatestRoom.Changed:connect(
+                    function()
+                        count -= 1
+                    end
+                )
+
+                while true do
+                    local room = game.Workspace.CurrentRooms:GetChildren()[count]
+                    require(game.ReplicatedStorage.ModulesClient.Module_Events).shatter(
+                        room
+                    )
+                    if room:FindFirstChild('RoomExit') then
+                        if room:FindFirstChild('nodes') then
+                            for _, node in room.nodes:GetChildren() do
+                                movel(silen, node.CFrame + Vector3.new(0, 3, 0), 30)
+                            end
+                        end
+                        if room:FindFirstChild('RoomExit') then
+                            movel(silen, room.RoomExit.CFrame, 30)
+                        end
+                    end
+                    count += 1
+                    if count >= #game.Workspace.CurrentRooms:GetChildren() then
+                        silen:Destroy()
+                        if silencet == false then
+                            silencet = true
+                            achievementGiver({
+                                Title = 'Eyes Close Ears open',
+                                Desc = 'Stay silent or i wont be heard',
+                                Reason = 'Encounter Silence',
+                                Image = 'rbxassetid://2129409220',
+                            })
+                        end
+                        break
+                    end
+                end
+    end)
+end
+
+Entities.AAA = function()
+    task.spawn(function()
+            local Model = game:GetObjects('rbxassetid://14826206904')[1]
+            local A60 = Model.RushNew
+            local Rooms = game.Workspace.CurrentRooms
+
+            Model.Parent = game.Workspace
+
+            A60.Parent = game.Workspace
+
+            A60.CFrame = Rooms:GetChildren()[1].RoomEntrance.CFrame
+            A60:SetAttribute('Paused', false)
+
+            local RunService = game:GetService('RunService')
+
+            function movea60(cframe)
+                local reached = false
+                local connection
+                connection = RunService.Stepped:Connect(function(_, step)
+                    if A60:GetAttribute('Paused') == false then
+                        local pivot = A60:GetPivot()
+                        local difference = (cframe.Position - pivot.Position)
+                        local unit = difference.Unit
+                        local magnitude = difference.Magnitude
+
+                        if magnitude > 0.1 then
+                            A60:PivotTo(
+                                pivot + unit * math.min(step * 277.5, magnitude)
+                            )
+                        else
+                            connection:Disconnect()
+                            reached = true
+                        end
+                    end
+                end)
+                repeat
+                    RunService.Stepped:Wait()
+                until reached
+            end
+
+            task.wait(3)
+
+            local killed = false
+
+            task.spawn(function()
+                while A60.Parent and task.wait() do
+                    local distance = (
+                        game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+                        - A60.Position
+                    ).magnitude
+                    if distance < 100 then
+                        require(
+                            game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game
+                        ).camShaker:ShakeOnce(
+                            15 / 100 * (100 - distance),
+                            20 / 100 * (100 - distance),
+                            0.1,
+                            1
+                        )
+                    end
+                    local ray = game.Workspace:Raycast(
+                        A60.Position,
+                        (
+                            game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+                            - A60.Position
+                        ).Unit * 50
+                    )
                     if ray then
                         if
                             ray.Instance.Parent
@@ -938,296 +1126,104 @@ task.spawn(function()
                                 and killed == false
                         then
                             killed = true
-                            local screen = Instance.new(
-                                'ScreenGui',
-                                game.Players.LocalPlayer.PlayerGui
-                            )
+                            A60:SetAttribute('Paused', true)
+                            task.wait(1)
+                            local ajump = Instance.new('Sound', game.Workspace)
+                            ajump.Volume = 1
+                            ajump.SoundId = ''
+                            ajump:Play()
+                            game:GetService('TweenService')
+                                :Create(A60, TweenInfo.new(0.2), {
+                                    CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame,
+                                })
+                                :Play()
+                            task.wait(0.5)
+                            game.Players.LocalPlayer.Character.Humanoid.Health = 0
+                            task.spawn(function()
+                                firesignal(
+                                    game.ReplicatedStorage.RemotesFolder.DeathHint.OnClientEvent,
+                                    {
+                                        'You died to an enitity designated as A-60',
+                                        'It can Appear at any moment, a loud scream will anounce its presence',
+                                        'When you hear it spawn you must stay out of its reach as soon as possible',
+                                        'It knows exactly where you are so hiding in different places will not work..',
+                                    },
+                                    'Blue'
+                                )
+                                game.ReplicatedStorage.GameStats['Player_' .. game.Players.LocalPlayer.Name].Total.DeathCause.Value =
+                                    'A-60'
+                            end)
+                            task.wait(1)
+                            A60:SetAttribute('Paused', false)
+                        end
+                    end
+                end
+            end)
 
-                            local background = Instance.new('Frame', screen)
-                            background.AnchorPoint = Vector2.new(0.5, 0.5)
-                            background.Size = UDim2.new(10, 0, 10, 0)
-                            background.BackgroundColor3 =
-                                Color3.fromRGB(48, 25, 50)
-
-                            local sound = Instance.new('Sound', game.Workspace)
-                            sound.SoundId = 'rbxassetid://10483837590'
-                            sound.Volume = 1
-                            sound:play()
-
-                            for i = 1, 5 do
-                                background.BackgroundColor3 =
-                                    Color3.fromRGB(48, 25, 50)
-                                task.wait(0.05)
-                                background.BackgroundColor3 =
-                                    Color3.fromRGB(0, 0, 0)
-                                task.wait(0.05)
+            for i = 1, 4 do
+                for i = 1, #Rooms:GetChildren(), 1 do
+                    local Room = Rooms:GetChildren()[i]
+                    local Nodes = Room:FindFirstChild('nodes')
+                    if Nodes then
+                        for i = 1, #Nodes:GetChildren(), 1 do
+                            local Node = Nodes:GetChildren()[i]
+                            if Node then
+                                movea60(Node.CFrame)
                             end
-
-                            screen:Destroy()
-                            game.Players.LocalPlayer.Character.Humanoid.Health =
-                                0
-                            firesignal(
-                                game.ReplicatedStorage.RemotesFolder.DeathHint.OnClientEvent,
-                                {
-                                    'You died to who you call Silence',
-                                    'Stay as silent as possible when you suspect its coming, so you know when to hide!',
-                                    'Its slow, but hard to hear',
-                                    'so hide!',
-                                },
-                                'Blue'
-                            )
-                            game.ReplicatedStorage.GameStats['Player_' .. game.Players.LocalPlayer.Name].Total.DeathCause.Value =
-                                'Silence'
                         end
                     end
-                end
-            end)
-
-            function movel(model, cframe, speed)
-                local reached = false
-                local connection
-                connection = RunService.Stepped:Connect(function(_, step)
-                    local pivot = model:GetPivot()
-                    local difference = (cframe.Position - pivot.Position)
-                    local unit = difference.Unit
-                    local magnitude = difference.Magnitude
-
-                    if magnitude > 0.1 then
-                        model:PivotTo(
-                            pivot + unit * math.min(step * speed, magnitude)
-                        )
-                    else
-                        connection:Disconnect()
-                        reached = true
+                    if Room:FindFirstChild('RoomEntrance') then
+                        movea60(Room.RoomEntrance.CFrame)
                     end
-                end)
-                repeat
-                    RunService.Stepped:Wait()
-                until reached
-            end
-
-            game.ReplicatedStorage.GameData.LatestRoom.Changed:connect(
-                function()
-                    count -= 1
                 end
-            )
 
-            while true do
-                local room = game.Workspace.CurrentRooms:GetChildren()[count]
-                require(game.ReplicatedStorage.ModulesClient.Module_Events).shatter(
-                    room
-                )
-                if room:FindFirstChild('RoomExit') then
-                    if room:FindFirstChild('nodes') then
-                        for _, node in room.nodes:GetChildren() do
-                            movel(silen, node.CFrame + Vector3.new(0, 3, 0), 30)
+                for i = #Rooms:GetChildren(), 1, -1 do
+                    local Room = Rooms:GetChildren()[i]
+                    local Nodes = Room:FindFirstChild('nodes')
+                    if Nodes then
+                        Nodes = Nodes:GetChildren()
+                        table.sort(Nodes, function(a, b)
+                            return tonumber(a.Name) > tonumber(b.Name)
+                        end)
+                        for i = 1, #Nodes, 1 do
+                            local Node = Nodes[i]
+                            if Node then
+                                movea60(Node.CFrame)
+                            end
                         end
                     end
-                    if room:FindFirstChild('RoomExit') then
-                        movel(silen, room.RoomExit.CFrame, 30)
+                    if Room:FindFirstChild('RoomExit') then
+                        movea60(Room.RoomExit.CFrame)
                     end
-                end
-                count += 1
-                if count >= #game.Workspace.CurrentRooms:GetChildren() then
-                    silen:Destroy()
-                    if silencet == false then
-                        silencet = true
-                        achievementGiver({
-                            Title = 'Eyes Close Ears open',
-                            Desc = 'Stay silent or i wont be heard',
-                            Reason = 'Encounter Silence',
-                            Image = 'rbxassetid://2129409220',
-                        })
-                    end
-                    break
                 end
             end
-        end
-end)
-end
 
-Entities.AAA = function()
-task.spawn(function()
-        local Model = game:GetObjects('rbxassetid://14826206904')[1]
-        local A60 = Model.RushNew
-        local Rooms = game.Workspace.CurrentRooms
+            A60:Destroy()
+            Model:Destroy()
 
-        Model.Parent = game.Workspace
-
-        A60.Parent = game.Workspace
-
-        A60.CFrame = Rooms:GetChildren()[1].RoomEntrance.CFrame
-        A60:SetAttribute('Paused', false)
-
-        local RunService = game:GetService('RunService')
-
-        function movea60(cframe)
-            local reached = false
-            local connection
-            connection = RunService.Stepped:Connect(function(_, step)
-                if A60:GetAttribute('Paused') == false then
-                    local pivot = A60:GetPivot()
-                    local difference = (cframe.Position - pivot.Position)
-                    local unit = difference.Unit
-                    local magnitude = difference.Magnitude
-
-                    if magnitude > 0.1 then
-                        A60:PivotTo(
-                            pivot + unit * math.min(step * 277.5, magnitude)
-                        )
-                    else
-                        connection:Disconnect()
-                        reached = true
-                    end
-                end
-            end)
-            repeat
-                RunService.Stepped:Wait()
-            until reached
-        end
-
-        task.wait(3)
-
-        local killed = false
-
-        task.spawn(function()
-            while A60.Parent and task.wait() do
-                local distance = (
-                    game.Players.LocalPlayer.Character.HumanoidRootPart.Position
-                    - A60.Position
-                ).magnitude
-                if distance < 100 then
+            local buler = Instance.new('ColorCorrectionEffect', game.lighting)
+            buler.TintColor = Color3.fromRGB(255, 0, 4)
+            buler.Saturation = -0.7
+            buler.Contrast = 0.2
+            task.spawn(function()
+                for i = 100, 0, -1 do
                     require(
                         game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game
-                    ).camShaker:ShakeOnce(
-                        15 / 100 * (100 - distance),
-                        20 / 100 * (100 - distance),
-                        0.1,
-                        1
-                    )
+                    ).camShaker:ShakeOnce(i / 50, 20, 0.1, 0.1)
+                    task.wait(0.1)
                 end
-                local ray = game.Workspace:Raycast(
-                    A60.Position,
-                    (
-                        game.Players.LocalPlayer.Character.HumanoidRootPart.Position
-                        - A60.Position
-                    ).Unit * 50
-                )
-                if ray then
-                    if
-                        ray.Instance.Parent
-                                == game.Players.LocalPlayer.Character
-                            and game.Players.LocalPlayer.Character:GetAttribute(
-                                'Hiding'
-                            ) == false
-                            and killed == false
-                        or ray.Instance.Parent.Parent
-                                == game.Players.LocalPlayer.Character
-                            and game.Players.LocalPlayer.Character:GetAttribute(
-                                'Hiding'
-                            ) == false
-                            and killed == false
-                    then
-                        killed = true
-                        A60:SetAttribute('Paused', true)
-                        task.wait(1)
-                        local ajump = Instance.new('Sound', game.Workspace)
-                        ajump.Volume = 1
-                        ajump.SoundId = ''
-                        ajump:Play()
-                        game:GetService('TweenService')
-                            :Create(A60, TweenInfo.new(0.2), {
-                                CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame,
-                            })
-                            :Play()
-                        task.wait(0.5)
-                        game.Players.LocalPlayer.Character.Humanoid.Health = 0
-                        task.spawn(function()
-                            firesignal(
-                                game.ReplicatedStorage.RemotesFolder.DeathHint.OnClientEvent,
-                                {
-                                    'You died to an enitity designated as A-60',
-                                    'It can Appear at any moment, a loud scream will anounce its presence',
-                                    'When you hear it spawn you must stay out of its reach as soon as possible',
-                                    'It knows exactly where you are so hiding in different places will not work..',
-                                },
-                                'Blue'
-                            )
-                            game.ReplicatedStorage.GameStats['Player_' .. game.Players.LocalPlayer.Name].Total.DeathCause.Value =
-                                'A-60'
-                        end)
-                        task.wait(1)
-                        A60:SetAttribute('Paused', false)
-                    end
-                end
-            end
-        end)
-
-        for i = 1, 4 do
-            for i = 1, #Rooms:GetChildren(), 1 do
-                local Room = Rooms:GetChildren()[i]
-                local Nodes = Room:FindFirstChild('nodes')
-                if Nodes then
-                    for i = 1, #Nodes:GetChildren(), 1 do
-                        local Node = Nodes:GetChildren()[i]
-                        if Node then
-                            movea60(Node.CFrame)
-                        end
-                    end
-                end
-                if Room:FindFirstChild('RoomEntrance') then
-                    movea60(Room.RoomEntrance.CFrame)
-                end
-            end
-
-            for i = #Rooms:GetChildren(), 1, -1 do
-                local Room = Rooms:GetChildren()[i]
-                local Nodes = Room:FindFirstChild('nodes')
-                if Nodes then
-                    Nodes = Nodes:GetChildren()
-                    table.sort(Nodes, function(a, b)
-                        return tonumber(a.Name) > tonumber(b.Name)
-                    end)
-                    for i = 1, #Nodes, 1 do
-                        local Node = Nodes[i]
-                        if Node then
-                            movea60(Node.CFrame)
-                        end
-                    end
-                end
-                if Room:FindFirstChild('RoomExit') then
-                    movea60(Room.RoomExit.CFrame)
-                end
-            end
-        end
-
-        A60:Destroy()
-        Model:Destroy()
-
-        local buler = Instance.new('ColorCorrectionEffect', game.lighting)
-        buler.TintColor = Color3.fromRGB(255, 0, 4)
-        buler.Saturation = -0.7
-        buler.Contrast = 0.2
-        task.spawn(function()
-            for i = 100, 0, -1 do
-                require(
-                    game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game
-                ).camShaker:ShakeOnce(i / 50, 20, 0.1, 0.1)
-                task.wait(0.1)
-            end
-        end)
-        task.wait(3)
-        game:GetService('TweenService')
-            :Create(buler, TweenInfo.new(15), {
-                TintColor = Color3.fromRGB(255, 255, 255),
-                Saturation = 0,
-                Contrast = 0,
-            })
-            :Play()
-        task.wait(15)
-        buler:Destroy()
-    end
-end)
+            end)
+            task.wait(3)
+            game:GetService('TweenService')
+                :Create(buler, TweenInfo.new(15), {
+                    TintColor = Color3.fromRGB(255, 255, 255),
+                    Saturation = 0,
+                    Contrast = 0,
+                })
+                :Play()
+            task.wait(15)
+            buler:Destroy()
+    end)
 end
 
 return Entities
