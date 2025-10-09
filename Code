@@ -534,7 +534,7 @@ task.spawn(function()
     while task.wait(497) do
         task.spawn(function()
             if game.ReplicatedStorage.GameData.LatestRoom.Value ~= 50 then
-                Entities.DeerGod
+                Entities.DeerGod()
             end
         end)
     end
