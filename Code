@@ -526,6 +526,10 @@ task.spawn(function()
         if game.ReplicatedStorage.GameData.LatestRoom.Value ~= 50 then
             game.ReplicatedStorage.GameData.LatestRoom.Changed:wait()
             Entities.Rebound()
+            game.ReplicatedStorage.GameData.LatestRoom.Changed:wait()
+            game.ReplicatedStorage.GameData.LatestRoom.Changed:wait()
+            game.ReplicatedStorage.GameData.LatestRoom.Changed:wait()
+            game.ReplicatedStorage.GameData.LatestRoom.Changed:wait()
         end
     end
 end)
