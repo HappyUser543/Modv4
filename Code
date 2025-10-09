@@ -465,7 +465,7 @@ TextChatService.OnIncomingMessage = function(Message)
             Entities.AAA()
         elseif command == '/spawn every entity x25' then
             for i = 1 , 25 , 1 do
-                task.wait(0.5
+                task.wait(0.5)
                 Entities.Ripper()
                 Entities.Cease()
                 Entities.Rebound()
