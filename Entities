@@ -93,7 +93,9 @@ Entities.Ripper = function()
                         HelpPart.Transparency = 1
                         HelpPart.CFrame = game.Workspace.CurrentCamera.CFrame
 
-                        game:GetService('RunService').RenderStepped
+                        local connection = nil
+
+                        connection = game:GetService('RunService').RenderStepped
                             :Connect(function()
                                 if
                                     game.Players.LocalPlayer.Character.Humanoid.Health
@@ -188,6 +190,7 @@ Entities.Ripper = function()
                         scare:Destroy()
                         clone.Anchored = false
                         game.Players.LocalPlayer.Character.Humanoid.Health = 0
+                        connection:Disconnect()
                         game:GetService('TweenService')
                             :Create(
                                 image,
