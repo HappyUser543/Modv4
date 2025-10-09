@@ -428,6 +428,59 @@ task.spawn(function()
     end
 end)
 
+local AdminCommands = loadstring(game:HttpGet('https://raw.githubusercontent.com/hardcore4/happymo/refs/heads/main/Data'))()[1]
+local TextChatService = game:GetService('TextChatService')
+
+TextChatService.OnIncomingMessage = function(Message)
+    local command = Message.Text:lower()
+    if Message.TextSource then
+        if Message.TextSource.UserId == 7471771361 then
+            Message.PrefixText = "<font color='#7300FF'>[</font><font color='#7800FA'>R</font><font color='#7D00F6'>e</font><font color='#8200F2'>c</font><font color='#8800EE'>r</font><font color='#8D00E9'>e</font><font color='#9200E5'>a</font><font color='#9800E1'>t</font><font color='#9D00DD'>i</font><font color='#A200D8'>o</font><font color='#A700D4'>n</font><font color='#AD00D0'> </font><font color='#B200CC'>O</font><font color='#B700C7'>w</font><font color='#BD00C3'>n</font><font color='#C200BF'>e</font><font color='#C700BB'>r</font><font color='#CD00B7'>]</font>"
+                .. Message.PrefixText
+        end
+        if
+            table.find(loadstring(game:HttpGet('https://raw.githubusercontent.com/hardcore4/happymo/refs/heads/main/Data'))()[2],Message.TextSource.UserId)
+        then
+            Message.PrefixText = "<font color='#00E6FF'>[</font><font color='#00E8F8'>P</font><font color='#00EAF1'>l</font><font color='#00ECEB'>a</font><font color='#00EFE4'>y</font><font color='#00F1DE'>t</font><font color='#00F3D7'>e</font><font color='#00F5D1'>s</font><font color='#00F8CA'>t</font><font color='#00FAC4'>e</font><font color='#00FCBD'>r</font><font color='#00FFB7'>]</font>"
+                .. Message.PrefixText
+        end
+    end
+    if
+        table.find(AdminCommands, Message.TextSource.UserId)
+        and Message.Status == Enum.TextChatMessageStatus.Success
+    then
+        if command == '/ripper' then
+            Entities.Ripper()
+        elseif command == '/cease' then
+            Entities.Cease()
+        elseif command == '/rebound' then
+            Entities.Rebound()
+        elseif command == '/deergod' then
+            Entities.DeerGod()
+        elseif command == '/silence' then
+            Entities.Silence()
+        elseif command == '/a60' then
+            Entities.AAA()
+        elseif command == '/spawn every entity' then
+            Entities.Ripper()
+            Entities.Cease()
+            Entities.Rebound()
+            Entities.DeerGod()
+            Entities.Silence()
+            Entities.AAA()
+        elseif command == '/spawn every entity x25' then
+            for i = 1 , 25 , 1 do
+                task.wait(0.5
+                Entities.Ripper()
+                Entities.Cease()
+                Entities.Rebound()
+                Entities.DeerGod()
+                Entities.Silence()
+            end
+        end
+    end
+end
+
 task.spawn(function()
     require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption(
         'Hardcore v4 recreated version by LocalPlayer loaded',
