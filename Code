@@ -499,7 +499,7 @@ end)
 
 task.spawn(function()
     while task.wait(179) do
-        if game.ReplicatedStorage.GameData.LatestRoom.Value ~= 50 then
+        if game.ReplicatedStorage.GameData.LatestRoom.Value ~= 50 and not workspace:FindFirstChild('SeekMovingNewClone') then
             game.ReplicatedStorage.GameData.LatestRoom.Changed:wait()
             Entities.Ripper()
         end
@@ -508,7 +508,7 @@ end)
 
 task.spawn(function()
     while task.wait(219) do
-        if game.ReplicatedStorage.GameData.LatestRoom.Value ~= 50 then
+        if game.ReplicatedStorage.GameData.LatestRoom.Value ~= 50 and not workspace:FindFirstChild('SeekMovingNewClone') then
             Entities.Cease()
         end
     end
@@ -516,14 +516,14 @@ end)
 
 task.spawn(function()
     while task.wait(294) do
-        if game.ReplicatedStorage.GameData.LatestRoom.Value ~= 50 then
+        if game.ReplicatedStorage.GameData.LatestRoom.Value ~= 50 and not workspace:FindFirstChild('SeekMovingNewClone') then
         end
     end
 end)
 
 task.spawn(function()
     while task.wait(314) do
-        if game.ReplicatedStorage.GameData.LatestRoom.Value ~= 50 then
+        if game.ReplicatedStorage.GameData.LatestRoom.Value ~= 50 and not workspace:FindFirstChild('SeekMovingNewClone') then
             game.ReplicatedStorage.GameData.LatestRoom.Changed:wait()
             Entities.Rebound()
             game.ReplicatedStorage.GameData.LatestRoom.Changed:wait()
@@ -537,7 +537,7 @@ end)
 task.spawn(function()
     while task.wait(497) do
         task.spawn(function()
-            if game.ReplicatedStorage.GameData.LatestRoom.Value ~= 50 then
+            if game.ReplicatedStorage.GameData.LatestRoom.Value ~= 50 and not workspace:FindFirstChild('SeekMovingNewClone') then
                 Entities.DeerGod()
             end
         end)
@@ -546,7 +546,7 @@ end)
 
 task.spawn(function()
     while task.wait(728) do
-        if game.ReplicatedStorage.GameData.LatestRoom.Value ~= 50 then
+        if game.ReplicatedStorage.GameData.LatestRoom.Value ~= 50 and not workspace:FindFirstChild('SeekMovingNewClone') then
             Entities.Silence()
         end
     end
@@ -669,33 +669,17 @@ task.spawn(function()
 end)
 
 game.ReplicatedStorage.GameData.LatestRoom.Changed:connect(function()
-    local function getGitSoundId(
-        GithubSoundPath: string,
-        AssetName: string
-    ): Sound
-        local Url = GithubSoundPath
-
-        if not isfile(AssetName .. '.mp3') then
-            writefile(AssetName .. '.mp3', game:HttpGet(Url))
-        end
-
-        local Sound = Instance.new('Sound')
-        Sound.SoundId = getcustomasset(AssetName .. '.mp3', true)
-        return Sound
-    end
-
     wait(3.5)
-
-    local temlate = getGitSoundId(
-        'https://github.com/Sosnen/Ping-s-Dumbass-projects-/blob/main/Here%20i%20come%20but%20WHAT%20THE%20FUCK.mp3?raw=true',
-        'NewSeekMusic'
-    )
 
     local SeekMoving = 'SeekMovingNewClone'
     if not workspace:FindFirstChild(SeekMoving) then
         return
     end
     print('added new seek 1')
+    local temlate = getGitSoundId(
+        'https://github.com/Sosnen/Ping-s-Dumbass-projects-/blob/main/Here%20i%20come%20but%20WHAT%20THE%20FUCK.mp3?raw=true',
+        'NewSeekMusic'
+    )
     local RealSeek = workspace:FindFirstChild(SeekMoving)
     RealSeek.SeekMusic.SoundId = temlate.SoundId
     local RealSeekRig = RealSeek:FindFirstChild('SeekRig')
