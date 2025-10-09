@@ -3,7 +3,7 @@ if game.Workspace:FindFirstChild('HardcoreInt') then
         'Executed 2 times! Returning...',
         true
     )
-    --return
+    return
 end
 
 warn('Loade')
