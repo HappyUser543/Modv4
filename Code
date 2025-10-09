@@ -390,11 +390,6 @@ task.spawn(function()
             end
         end)
     else
-        loadstring(
-            game:HttpGet(
-                'https://raw.githubusercontent.com/hardcorev4/hardcorev4/refs/heads/main/sprintmobile'
-            )
-        )()
     end
 end)
 
