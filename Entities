@@ -291,8 +291,8 @@ Entities.Ripper = function()
                 ripper.CanCollide = false
                 task.wait(2)
                 ripper:Destroy()
-                if rippert == false then
-                    rippert = true
+                if _G.rippert == false then
+                    _G.rippert = true
                     achievementGiver({
                         Title = 'Torn Apart',
                         Desc = 'Dont leave too early..',
@@ -657,8 +657,8 @@ Entities.Rebound = function()
                 game.ReplicatedStorage.GameData.LatestRoom.Changed:wait()
             end
         end
-        if reboundt == false then
-            reboundt = true
+        if _G.reboundt == false then
+            _G.reboundt = true
             achievementGiver({
                 Title = 'Out Of Many Rebounds',
                 Desc = 'Back for more!',
@@ -825,8 +825,8 @@ Entities.DeerGod = function()
                 der:Destroy()
                 soun:Destroy()
                 CustomMusic:Destroy()
-                if dergodt == false then
-                    dergodt = true
+                if _G.dergodt == false then
+                    _G.dergodt = true
                     achievementGiver({
                         Title = 'Last Chance To Look Away',
                         Desc = 'Why are you running?',
@@ -845,11 +845,6 @@ Entities.Silence = function()
         local killed = false
         local count = 1
         local RunService = game:GetService('RunService')
-        local achievementGiver = loadstring(
-            game:HttpGet(
-                'https://raw.githubusercontent.com/Voor-Pr00/Achivements/refs/heads/main/Voorpr0'
-            )
-        )()
 
         local silen = game:GetObjects('rbxassetid://18866325954')[1].RushNew
         silen.Parent = game.Workspace
@@ -968,8 +963,8 @@ Entities.Silence = function()
             count += 1
             if count >= #game.Workspace.CurrentRooms:GetChildren() then
                 silen:Destroy()
-                if silencet == false then
-                    silencet = true
+                if _G.silencet == false then
+                    _G.silencet = true
                     achievementGiver({
                         Title = 'Eyes Close Ears open',
                         Desc = 'Stay silent or i wont be heard',
