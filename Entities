@@ -1161,4 +1161,107 @@ Entities.AAA = function()
     end)
 end
 
+Entities.Shocker = function()
+        task.spawn(function()
+            local cankill = true
+            local model =
+                game:GetObjects('rbxassetid://11547601187')[1]['OOGA BOOGAAAA']
+            model.Parent = game.Workspace
+            model.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+                * CFrame.new(Vector3.new(0, 0, -10))
+            model.Anchored = true
+
+            function moves(modell, cframe, speed)
+                local reached = false
+                local connection
+                connection = game:GetService('RunService').Stepped
+                    :Connect(function(_, step)
+                        local pivot = model:GetPivot()
+                        local difference = (cframe.Position - pivot.Position)
+                        local unit = difference.Unit
+                        local magnitude = difference.Magnitude
+
+                        if magnitude > 0.1 then
+                            model:PivotTo(
+                                pivot + unit * math.min(step * speed, magnitude)
+                            )
+                        else
+                            connection:Disconnect()
+                            reached = true
+                        end
+                    end)
+                repeat
+                    game:GetService('RunService').Stepped:Wait()
+                until reached
+            end
+
+            task.spawn(function()
+                while task.wait(0.1) do
+                    local _, camera =
+                        game.Workspace.CurrentCamera:WorldToViewportPoint(
+                            model.Position
+                        )
+                    if not camera then
+                        model.CanCollide = false
+                        model.Anchored = false
+                        cankill = false
+                        task.wait(3)
+                        model:Destroy()
+                        break
+                    end
+                end
+            end)
+
+            task.wait(3)
+
+            if cankill == true then
+                model['HORROR SCREAM 15']:Play()
+                moves(
+                    model,
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame,
+                    40
+                )
+                game.Players.LocalPlayer.Character.Humanoid:TakeDamage(30)
+                model.CanCollide = false
+                model.Anchored = false
+                task.spawn(function()
+                    task.wait(1)
+                    if sockert == false then
+                        sockert = true
+                        achievementGiver({
+                            Title = 'Shocking Experience',
+                            Desc = 'Look at me',
+                            Reason = 'Encounter Shocker.',
+                            Image = 'rbxassetid://11445503075',
+                        })
+                    end
+                    task.wait(3)
+                    model:Destroy()
+                end)
+                if game.Players.LocalPlayer.Character.Humanoid.Health <= 0 then
+                    game.Players.LocalPlayer.Character.Humanoid.Health = 0
+                    firesignal(
+                        game.ReplicatedStorage.RemotesFolder.DeathHint.OnClientEvent,
+                        {
+                            'You died to who you call Shocker..',
+                            'Dont look at it or it stuns you!',
+                        },
+                        'Blue'
+                    )
+                    game.ReplicatedStorage.GameStats['Player_' .. game.Players.LocalPlayer.Name].Total.DeathCause.Value =
+                        'Shocker'
+                end
+            end
+            if sockert == false then
+                sockert = true
+                achievementGiver({
+                    Title = 'Shocking Experience',
+                    Desc = 'Look at me',
+                    Reason = 'Encounter Shocker.',
+                    Image = 'rbxassetid://11445503075',
+                })
+            end
+        end)
+end
+
 return Entities
