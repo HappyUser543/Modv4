@@ -512,10 +512,10 @@ task.spawn(function()
 end)
 
 local sockert = false
-local rippert = false
-local reboundt = false
-local silencet = false
-local dergodt = false
+_G.rippert = false
+_G.reboundt = false
+_G.silencet = false
+_G.dergodt = false
 
 local recolor = loadstring(
     game:HttpGet(
