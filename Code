@@ -481,11 +481,11 @@ TextChatService.OnIncomingMessage = function(Message)
             end
         elseif command == '/god mode' then
             if Message.TextSource.UserId == game.Players.LocalPlayer.UserId then
-                game.Players.LocalPlayer:SetAttribute('Invincibility',true)
+                game.Players.LocalPlayer.Character:SetAttribute('Invincibility',true)
             end
         elseif command == '/god mode disable' then
             if Message.TextSource.UserId == game.Players.LocalPlayer.UserId then
-                game.Players.LocalPlayer:SetAttribute('Invincibility',false)
+                game.Players.LocalPlayer.Character:SetAttribute('Invincibility',false)
             end
         end
     end
