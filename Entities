@@ -801,8 +801,8 @@ Entities.DeerGod = function()
         end)
 
         while true do
-            if not room then continue end
             local room = game.Workspace.CurrentRooms:GetChildren()[count]
+            if not room then task.wait(0.1) warn('no room found for deergod') continue end
             require(game.ReplicatedStorage.ModulesClient.Module_Events).shatter(
                 room
             )
