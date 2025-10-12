@@ -12,6 +12,10 @@ local function getGitSoundId(GithubSoundPath: string, AssetName: string): Sound
     return Sound
 end
 
+local function IsProtected()
+    return game.Players.LocalPlayer.Character:GetAttribute('Invincibility')
+end
+
 local achievementGiver = loadstring(
     game:HttpGet(
         'https://raw.githubusercontent.com/Voor-Pr00/Achivements/refs/heads/main/Voorpr0'
@@ -62,15 +66,12 @@ Entities.Ripper = function()
                                 == game.Players.LocalPlayer.Character
                             and game.Players.LocalPlayer.Character:GetAttribute(
                                 'Hiding'
-                            ) == false
-                        or ray.Instance.Parent.Parent == game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:GetAttribute(
-                            'Hiding'
-                        ) == false
+                            ) == false and IsProtected ~= true
                         or ray.Instance.Parent.Parent.Parent
                                 == game.Players.LocalPlayer.Character
                             and game.Players.LocalPlayer.Character:GetAttribute(
                                 'Hiding'
-                            ) == false
+                            ) == false and IsProtected ~= true
                     then
                         local scare = getGitSoundId(
                             'https://github.com/localplayerr/Doors-stuff/raw/refs/heads/main/Hardcore%20v4%20recreate/Im%20Scared.MP3',
@@ -395,7 +396,7 @@ Entities.Cease = function()
                             'Humanoid'
                         ).MoveDirection
                         ~= Vector3.new(0, 0, 0)
-                then
+                then if IsProtected == true then return end
                     game.Players.LocalPlayer.Character.Humanoid.Health = 0
                     firesignal(
                         game.ReplicatedStorage.RemotesFolder.DeathHint.OnClientEvent,
@@ -496,7 +497,7 @@ Entities.Rebound = function()
             entity.Parent = game.Workspace
             entity.Anchored = true
             entity.CFrame =
-                game.Workspace.CurrentRooms:GetChildren()[#game.Workspace.CurrentRooms:GetChildren()].RoomExit.CFrame
+                game.Workspace.CurrentRooms:GetChildren()[#game.Workspace.CurrentRooms:GetChildren()]:WaitForChild('RoomExit').CFrame
 
             task.spawn(function()
                 while task.wait(0.1) and entity.Parent do
@@ -529,12 +530,12 @@ Entities.Rebound = function()
                                     == game.Players.LocalPlayer.Character
                                 and game.Players.LocalPlayer.Character:GetAttribute(
                                     'Hiding'
-                                ) == false
+                                ) == false and IsProtected ~= true
                             or ray.Instance.Parent.Parent
                                     == game.Players.LocalPlayer.Character
                                 and game.Players.LocalPlayer.Character:GetAttribute(
                                     'Hiding'
-                                ) == false
+                                ) == false and IsProtected ~= true
                         then
                             task.wait(1)
                             local kill = getGitSoundId(
@@ -720,13 +721,13 @@ Entities.DeerGod = function()
                             and game.Players.LocalPlayer.Character:GetAttribute(
                                 'Hiding'
                             ) == false
-                            and killed == false
+                            and killed == false and IsProtected ~= true
                         or ray.Instance.Parent.Parent
                                 == game.Players.LocalPlayer.Character
                             and game.Players.LocalPlayer.Character:GetAttribute(
                                 'Hiding'
                             ) == false
-                            and killed == false
+                            and killed == false and IsProtected ~= true
                     then
                         killed = true
                         local screen = Instance.new(
@@ -800,6 +801,7 @@ Entities.DeerGod = function()
         end)
 
         while true do
+            if not room then continue end
             local room = game.Workspace.CurrentRooms:GetChildren()[count]
             require(game.ReplicatedStorage.ModulesClient.Module_Events).shatter(
                 room
@@ -866,13 +868,13 @@ Entities.Silence = function()
                             and game.Players.LocalPlayer.Character:GetAttribute(
                                 'Hiding'
                             ) == false
-                            and killed == false
+                            and killed == false and IsProtected ~= true
                         or ray.Instance.Parent.Parent
                                 == game.Players.LocalPlayer.Character
                             and game.Players.LocalPlayer.Character:GetAttribute(
                                 'Hiding'
                             ) == false
-                            and killed == false
+                            and killed == false and IsProtected ~= true
                     then
                         killed = true
                         local screen = Instance.new(
@@ -1052,13 +1054,13 @@ Entities.AAA = function()
                             and game.Players.LocalPlayer.Character:GetAttribute(
                                 'Hiding'
                             ) == false
-                            and killed == false
+                            and killed == false and IsProtected ~= true
                         or ray.Instance.Parent.Parent
                                 == game.Players.LocalPlayer.Character
                             and game.Players.LocalPlayer.Character:GetAttribute(
                                 'Hiding'
                             ) == false
-                            and killed == false
+                            and killed == false and IsProtected ~= true
                     then
                         killed = true
                         A60:SetAttribute('Paused', true)
@@ -1097,38 +1099,42 @@ Entities.AAA = function()
 
         for i = 1, 4 do
             for i = 1, #Rooms:GetChildren(), 1 do
-                local Room = Rooms:GetChildren()[i]
-                local Nodes = Room:FindFirstChild('nodes')
-                if Nodes then
-                    for i = 1, #Nodes:GetChildren(), 1 do
-                        local Node = Nodes:GetChildren()[i]
-                        if Node then
-                            movea60(Node.CFrame)
+                if Room then
+                    local Room = Rooms:GetChildren()[i]
+                    local Nodes = Room:FindFirstChild('nodes')
+                    if Nodes then
+                        for i = 1, #Nodes:GetChildren(), 1 do
+                            local Node = Nodes:GetChildren()[i]
+                            if Node then
+                                movea60(Node.CFrame)
+                            end
                         end
                     end
-                end
-                if Room:FindFirstChild('RoomEntrance') then
-                    movea60(Room.RoomEntrance.CFrame)
-                end
-            end
-
-            for i = #Rooms:GetChildren(), 1, -1 do
-                local Room = Rooms:GetChildren()[i]
-                local Nodes = Room:FindFirstChild('nodes')
-                if Nodes then
-                    Nodes = Nodes:GetChildren()
-                    table.sort(Nodes, function(a, b)
-                        return tonumber(a.Name) > tonumber(b.Name)
-                    end)
-                    for i = 1, #Nodes, 1 do
-                        local Node = Nodes[i]
-                        if Node then
-                            movea60(Node.CFrame)
-                        end
+                    if Room:FindFirstChild('RoomEntrance') then
+                        movea60(Room.RoomEntrance.CFrame)
                     end
                 end
-                if Room:FindFirstChild('RoomExit') then
-                    movea60(Room.RoomExit.CFrame)
+    
+                for i = #Rooms:GetChildren(), 1, -1 do
+                    if Room then
+                        local Room = Rooms:GetChildren()[i]
+                        local Nodes = Room:FindFirstChild('nodes')
+                        if Nodes then
+                            Nodes = Nodes:GetChildren()
+                            table.sort(Nodes, function(a, b)
+                                return tonumber(a.Name) > tonumber(b.Name)
+                            end)
+                            for i = 1, #Nodes, 1 do
+                                local Node = Nodes[i]
+                                if Node then
+                                    movea60(Node.CFrame)
+                                end
+                            end
+                        end
+                        if Room:FindFirstChild('RoomExit') then
+                            movea60(Room.RoomExit.CFrame)
+                        end    
+                    end
                 end
             end
         end
@@ -1221,7 +1227,9 @@ Entities.Shocker = function()
                     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame,
                     40
                 )
-                game.Players.LocalPlayer.Character.Humanoid:TakeDamage(30)
+                if IsProtected ~= true then
+                    game.Players.LocalPlayer.Character.Humanoid:TakeDamage(30)
+                end
                 model.CanCollide = false
                 model.Anchored = false
                 task.spawn(function()
