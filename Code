@@ -480,11 +480,11 @@ TextChatService.OnIncomingMessage = function(Message)
                 Entities.Shocker()
             end
         elseif command == '/god mode' then
-            if Message.TextSource == game.Players.LocalPlayer then
+            if Message.TextSource.UserId == game.Players.LocalPlayer.UserId then
                 game.Players.LocalPlayer:SetAttribute('Invincibility',true)
             end
         elseif command == '/god mode disable' then
-            if Message.TextSource == game.Players.LocalPlayer then
+            if Message.TextSource.UserId == game.Players.LocalPlayer.UserId then
                 game.Players.LocalPlayer:SetAttribute('Invincibility',false)
             end
         end
