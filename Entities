@@ -694,7 +694,8 @@ Entities.DeerGod = function()
         local soun = game:GetObjects('rbxassetid://16092643532')[1]['Static...']
         soun.Parent = game.Workspace
         soun:Play()
-        for _, v: Model in game.Workspace.CurrentRooms:GetChildren() do
+        for i = 1 , #game.Workspace.CurrentRooms:GetChildren() , 1 do
+            local v = game.Workspace.CurrentRooms:GetChildren()[i]
             task.spawn(function()
                 require(game.ReplicatedStorage.ModulesClient.Module_Events).flicker(
                     v,
