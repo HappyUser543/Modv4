@@ -1099,7 +1099,7 @@ Entities.AAA = function()
 
         for i = 1, 4 do
             for i = 1, #Rooms:GetChildren(), 1 do
-                if Room then
+                if true then
                     local Room = Rooms:GetChildren()[i]
                     local Nodes = Room:FindFirstChild('nodes')
                     if Nodes then
@@ -1116,7 +1116,7 @@ Entities.AAA = function()
                 end
     
                 for i = #Rooms:GetChildren(), 1, -1 do
-                    if Room then
+                    if true then
                         local Room = Rooms:GetChildren()[i]
                         local Nodes = Room:FindFirstChild('nodes')
                         if Nodes then
