@@ -250,7 +250,8 @@ Entities.Ripper = function()
                 local room = game.Workspace.CurrentRooms:GetChildren()[count]
                 if room.RoomExit then
                     if room:FindFirstChild("nodes") then
-                        for _, node in room.nodes:GetChildren() do
+                        for i = 1, #room.nodes:GetChildren(), 1 do
+                            local node = room.nodes:GetChildren()[i]
                             if node.Parent then
                                 move(ripper, node.CFrame + Vector3.new(0, 3, 0), 100)
                             end
@@ -413,7 +414,8 @@ Entities.Cease = function()
                 local room = game.Workspace.CurrentRooms:GetChildren()[count]
                 if room:FindFirstChild("RoomExit") then
                     if room:FindFirstChild("nodes") then
-                        for _, node in room.nodes:GetChildren() do
+                        for i = 1, #room.nodes:GetChildren(), 1 do
+                            local node = room.nodes:GetChildren()[i]
                             if node.Parent then
                                 movec(cease, node.CFrame + Vector3.new(0, 3, 0), 35)
                             end
@@ -781,7 +783,8 @@ Entities.DeerGod = function()
                 require(game.ReplicatedStorage.ModulesClient.Module_Events).shatter(room)
                 if room:FindFirstChild("RoomExit") then
                     if room:FindFirstChild("nodes") then
-                        for _, node in room.nodes:GetChildren() do
+                        for i = 1, #room.nodes:GetChildren(), 1 do
+                            local node = room.nodes:GetChildren()[i]
                             if node.Parent then
                                 moved(der, node.CFrame + Vector3.new(0, 3, 0), 20)
                             end
@@ -919,7 +922,8 @@ Entities.Silence = function()
                 require(game.ReplicatedStorage.ModulesClient.Module_Events).shatter(room)
                 if room:FindFirstChild("RoomExit") then
                     if room:FindFirstChild("nodes") then
-                        for _, node in room.nodes:GetChildren() do
+                        for i = 1, #room.nodes:GetChildren(), 1 do
+                            local node = room.nodes:GetChildren()[i]
                             movel(silen, node.CFrame + Vector3.new(0, 3, 0), 30)
                         end
                     end
