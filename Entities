@@ -114,7 +114,8 @@ Entities.Ripper = function()
                                 twier:Play()
                                 twier.Completed:Wait()
 
-                                for _, object in clone:GetDescendants() do
+                                for i = 1, #clone:GetDescendants() , 1 do
+                                    local object = clone:GetDescendants()[i]
                                     if object:IsA("Sound") then
                                         object.Volume = 0
                                     elseif object:IsA("ParticleEmitter") then
